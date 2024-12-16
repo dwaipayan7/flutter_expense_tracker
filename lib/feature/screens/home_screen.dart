@@ -1,25 +1,127 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expense_tracker/cors/utils/color.dart';
+import 'package:flutter_expense_tracker/feature/models/bill_model.dart';
+import 'package:flutter_expense_tracker/feature/models/subscription_model.dart';
 import 'package:flutter_expense_tracker/feature/widgets/custom_arc_painter.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  bool isSubscription = true;
+
+  @override
   Widget build(BuildContext context) {
+
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    final items = isSubscription ? Subscription : Bill;
+
     return Scaffold(
       backgroundColor: gray,
       body: SingleChildScrollView(
         child: Column(
           children: [
             header(context),
+            subscriptionAndBill(),
+            ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index){
+
+                }
+            )
 
           ],
         ),
       ),
     );
+  }
+
+  Container subscriptionAndBill(){
+
+    return Container(
+      margin: EdgeInsets.all(20),
+      padding: EdgeInsets.all(8),
+      height: 58,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+              child:segmentButton(
+                  isActive: isSubscription,
+                  title: "Your subscription",
+                  onPressed: () {
+                    setState(() {
+                      isSubscription = isSubscription;
+                    });
+                  }
+              )
+          ),
+
+          Expanded(
+              child:segmentButton(
+                  isActive: !isSubscription,
+                  title: "UpComing Bills",
+                  onPressed: () {
+                    setState(() {
+                      isSubscription = isSubscription;
+                    });
+                  }
+              )
+          ),
+
+          Expanded(
+              child:segmentButton(
+                  isActive: isSubscription,
+                  title: "Your subscription",
+                  onPressed: () {
+                    setState(() {
+                      isSubscription = isSubscription;
+                    });
+                  }
+              )
+          ),
+        ],
+      ),
+    );
+
+  }
+
+  InkWell segmentButton({onPressed, required bool isActive, title}){
+
+   return InkWell(
+     onTap: onPressed,
+      borderRadius: BorderRadius.circular(13),
+      child: Container(
+        decoration: isActive ? BoxDecoration(
+          border: Border.all(
+            color: border.withOpacity(0.2)
+          ),
+          borderRadius: BorderRadius.circular(13)
+        ) : null,
+        alignment: Alignment.center,
+        child: Text(
+          title,
+          style: TextStyle(
+            color: isActive ? Colors.white : gray30,
+            fontSize: 12,
+            fontWeight: FontWeight.w600
+          ),
+        ),
+      ),
+    );
+
   }
 
   Stack currentStatusButton({title, value, statusColor}) {
